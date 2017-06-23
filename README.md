@@ -3,7 +3,7 @@
 RemoteDrawing is a small Android app to educational only.
 It uses node.js and socket.io to communicate trough a server.
 
-The client is available on [github here][RemDrawSock] made by [Akhu]
+The server is available on [github here][RemDrawSock] made by [Akhu]
 
 ### Install instruction for RemoteDrawingSocket
 
