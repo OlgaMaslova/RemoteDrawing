@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">RemoteDrawing</string>
+    <string name="loading">Loading...</string>
+    <string name="clearAll">Clear for all</string>
+    <string name="changeColor">Change color</string>
+    <string name="Room">You are in room </string>
+
+
+</resources>
