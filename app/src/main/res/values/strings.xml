@@ -2,11 +2,7 @@
     <string name="app_name">RemoteDrawing</string>
     <string name="loading">Loading...</string>
     <string name="clearAll">Clear for all</string>
-<<<<<<< HEAD
     <string name="changeColor">Change color</string>
     <string name="Room">You are in room </string>
 
-
-=======
->>>>>>> 73479522a4da535a1f12065714569d7c133e8510
 </resources>

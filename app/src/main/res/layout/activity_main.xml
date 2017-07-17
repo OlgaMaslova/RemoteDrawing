@@ -6,11 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="net.aboutgoods.remotedrawing.MainActivity"
-<<<<<<< HEAD
     android:background="@color/blueviolet">
-=======
-    android:background="@color/grey">
->>>>>>> 73479522a4da535a1f12065714569d7c133e8510
+
 
     <ProgressBar
         android:layout_width="wrap_content"
@@ -27,7 +24,7 @@
         android:layout_below="@+id/progressBar"
         android:layout_centerHorizontal="true"
         android:textColor="@android:color/white"
-<<<<<<< HEAD
+
         android:layout_margin="16dp"
         android:id="@+id/textView2" />
 
@@ -37,8 +34,3 @@
 </RelativeLayout>
 
 
-=======
-        android:layout_margin="16dp"/>
-
-</RelativeLayout>
->>>>>>> 73479522a4da535a1f12065714569d7c133e8510

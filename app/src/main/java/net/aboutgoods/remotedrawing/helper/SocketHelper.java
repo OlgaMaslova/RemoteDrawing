@@ -2,10 +2,7 @@ package net.aboutgoods.remotedrawing.helper;
 
 import android.app.Activity;
 import android.graphics.Paint;
-<<<<<<< HEAD
-=======
 
->>>>>>> 73479522a4da535a1f12065714569d7c133e8510
 import net.aboutgoods.remotedrawing.DrawingActivity;
 import net.aboutgoods.remotedrawing.DrawingView;
 
@@ -25,19 +22,13 @@ import io.socket.emitter.Emitter;
  */
 public class SocketHelper {
 
-<<<<<<< HEAD
+
     private static final String HOST = "http://192.168.1.60:3000";
     private static SocketHelper mInstance = null;
     private LinkedHashMap<String, String> mUserList;
     private Socket mSocket;
     private String mRoomName;
 
-=======
-    private static final String HOST = "http://192.168.1.95:3000";
-    private static SocketHelper mInstance = null;
-    private LinkedHashMap<String, String> mUserList;
-    private Socket mSocket;
->>>>>>> 73479522a4da535a1f12065714569d7c133e8510
 
     private SocketHelper() {
 
@@ -46,28 +37,9 @@ public class SocketHelper {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-<<<<<<< HEAD
-        mSocket.connect();
-=======
 
         mSocket.connect();
 
-        mSocket.on("userList", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                JSONArray jsonArray = (JSONArray) args[0];
-                mUserList = new LinkedHashMap<String, String>();
-                for(int i=0; i<jsonArray.length(); i++) {
-                    try {
-                        JSONObject jsonUser = jsonArray.getJSONObject(i);
-                        mUserList.put(jsonUser.getString("id"), jsonUser.getString("color"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
->>>>>>> 73479522a4da535a1f12065714569d7c133e8510
     }
 
     /**
@@ -75,13 +47,10 @@ public class SocketHelper {
      *
      * @return the socket helper
      */
-<<<<<<< HEAD
-    public static SocketHelper getInstance() {
-        if (mInstance == null) {
-=======
+
     public static SocketHelper getInstance(){
         if(mInstance == null) {
->>>>>>> 73479522a4da535a1f12065714569d7c133e8510
+
             mInstance = new SocketHelper();
         }
         return mInstance;
@@ -91,6 +60,16 @@ public class SocketHelper {
         mSocket.off();
         mSocket.disconnect();
         mInstance = null;
+    }
+
+
+    /*
+        * Logs in, gets socket.id
+        * @param activity the activity
+         */
+    public void login (final Activity activity) {
+
+        mSocket.emit("login", "");
     }
 
     /**
@@ -147,7 +126,7 @@ public class SocketHelper {
     }
 
     /**
-<<<<<<< HEAD
+
      * Gets the color, joins the room
      *
      * @param activity the activity
@@ -166,30 +145,21 @@ public class SocketHelper {
         }
 
         mSocket.on("me", new Emitter.Listener() {
-=======
-     * Login.
-     *
-     * @param activity the activity
-     */
-    public void login(final Activity activity) {
+                    @Override
+                    public void call(Object... args) {
 
-        Emitter.Listener listener = new Emitter.Listener() {
->>>>>>> 73479522a4da535a1f12065714569d7c133e8510
-            @Override
-            public void call(Object... args) {
+                        JSONObject jsonData = (JSONObject) args[0];
+                        if (activity instanceof DrawingActivity) {
+                            ((DrawingActivity) activity).onLogin(jsonData);
+                            return;
+                        }
 
-                JSONObject jsonData = (JSONObject) args[0];
-
-<<<<<<< HEAD
-                if (activity instanceof DrawingActivity) {
-                    ((DrawingActivity) activity).onLogin(jsonData);
-                    return;
-                }
-                throw new StackOverflowError(activity.getLocalClassName() + " must implement DrawingActivity");
-                }
+                        throw new StackOverflowError(activity.getLocalClassName() + " must implement DrawingActivity");
+                    }
         });
 
-        mSocket.on("userList", new Emitter.Listener() {
+
+         mSocket.on("userList", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 JSONArray jsonArray = (JSONArray) args[0];
@@ -215,25 +185,6 @@ public class SocketHelper {
         mSocket.emit("leave");
     }
 
-    /*
-    * Logs in, gets socket.id
-    * @param activity the activity
-    * @param drawingView the drawing view
-     */
-    public void login (final Activity activity) {
-=======
-                if(activity instanceof DrawingActivity) {
-                    ((DrawingActivity) activity).onLogin(jsonData);
-                } else {
-                    throw new StackOverflowError(activity.getLocalClassName() + " must implement DrawingActivity");
-                }
-            }
-        };
-
-        mSocket.on("me", listener);
->>>>>>> 73479522a4da535a1f12065714569d7c133e8510
-        mSocket.emit("login", "");
-    }
 
     /**
      * Clear drawing surface.
@@ -254,15 +205,12 @@ public class SocketHelper {
 
         String color = mUserList.get(userId);
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 73479522a4da535a1f12065714569d7c133e8510
         if (color == null) return null;
 
         return PaintHelper.createPaintFromRGB(color);
     }
-<<<<<<< HEAD
+
 
     /**
      * Gets new color from the server
@@ -288,7 +236,7 @@ public class SocketHelper {
             public void call(Object... args) {
                 JSONObject jsonUserColor = (JSONObject) args[0];
                 drawingView.setPaintNewColor(jsonUserColor, activity);
-                }
+            }
         });
 
     }
@@ -296,7 +244,3 @@ public class SocketHelper {
 
 
 
-
-=======
-}
->>>>>>> 73479522a4da535a1f12065714569d7c133e8510
