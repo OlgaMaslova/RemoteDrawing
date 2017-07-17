@@ -10,9 +10,12 @@ import android.graphics.Path;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+<<<<<<< HEAD
 import android.widget.Toast;
 
 
+=======
+>>>>>>> 73479522a4da535a1f12065714569d7c133e8510
 
 import net.aboutgoods.remotedrawing.helper.PaintHelper;
 import net.aboutgoods.remotedrawing.helper.SocketHelper;
@@ -34,11 +37,17 @@ public class DrawingView extends View {
     private Paint mBitmapPaint;
     private Context mContext;
     private Paint mLinePaint;
+<<<<<<< HEAD
     private Paint paintNewColor;
     private Path mCirclePath;
     private String mBackgroundColor = "#424242";
     private float mX, mY;
     private String mMessage = "";
+=======
+    private Path mCirclePath;
+    private String mBackgroundColor = "#424242";
+    private float mX, mY;
+>>>>>>> 73479522a4da535a1f12065714569d7c133e8510
 
     /**
      * Instantiates a new Drawing view.
@@ -48,7 +57,11 @@ public class DrawingView extends View {
      */
     public DrawingView(final Activity activity, Paint paint) {
         super(activity);
+<<<<<<< HEAD
         this.mContext = activity;
+=======
+        this.mContext =activity;
+>>>>>>> 73479522a4da535a1f12065714569d7c133e8510
         this.mPath = new Path();
         this.mBitmapPaint = new Paint(Paint.DITHER_FLAG);
         this.mLinePaint = paint;
@@ -71,10 +84,13 @@ public class DrawingView extends View {
         canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
         canvas.drawPath(mPath, PaintHelper.getBluePrintPaint());
         canvas.drawPath(mCirclePath, PaintHelper.getCirclePaint());
+<<<<<<< HEAD
         // Changes brush of Blue Print for Eraser
         if (!mMessage.isEmpty()){
             canvas.drawPath(mPath, PaintHelper.getEraserBluePrintPaint());
         }
+=======
+>>>>>>> 73479522a4da535a1f12065714569d7c133e8510
     }
 
     private void touch_start(float x, float y) {
@@ -89,9 +105,16 @@ public class DrawingView extends View {
         float dy = Math.abs(y - mY);
         if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
             SocketHelper.getInstance().sendCoordinate(mX, mY, x, y);
+<<<<<<< HEAD
             mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
             mX = x;
             mY = y;
+=======
+            mPath.quadTo(mX, mY, (x + mX)/2, (y + mY)/2);
+            mX = x;
+            mY = y;
+
+>>>>>>> 73479522a4da535a1f12065714569d7c133e8510
             mCirclePath.reset();
             mCirclePath.addCircle(mX, mY, 60, Path.Direction.CW);
         }
@@ -139,11 +162,19 @@ public class DrawingView extends View {
 
         mCanvas.drawColor(Color.parseColor(mBackgroundColor));
         activity.runOnUiThread(new Runnable() {
+<<<<<<< HEAD
             @Override
             public void run() {
                 invalidate();
             }
         });
+=======
+                @Override
+                public void run() {
+                    invalidate();
+                }
+            });
+>>>>>>> 73479522a4da535a1f12065714569d7c133e8510
 
     }
 
@@ -164,10 +195,14 @@ public class DrawingView extends View {
             if (userId != null && !userId.isEmpty()) {
 
                 Paint paint = SocketHelper.getInstance().getPaintColorFromUserId(userId);
+<<<<<<< HEAD
 
                 if (paint == null)
                     return;
 
+=======
+                if (paint == null) return;
+>>>>>>> 73479522a4da535a1f12065714569d7c133e8510
 
                 JSONObject jsonOldCoordinate = jsonCoordinates.getJSONObject("old");
                 JSONObject jsonNewCoordinate = jsonCoordinates.getJSONObject("new");
@@ -181,10 +216,16 @@ public class DrawingView extends View {
                 Path path = new Path();
                 path.moveTo(oldX, oldY);
                 path.lineTo(newX, newY);
+<<<<<<< HEAD
 
                 mCanvas.drawPath(path, paint);
 
                 path.reset();
+=======
+                mCanvas.drawPath(path, paint);
+                path.reset();
+
+>>>>>>> 73479522a4da535a1f12065714569d7c133e8510
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -196,6 +237,7 @@ public class DrawingView extends View {
             Log.e(TAG, "drawFromJson: " + e.getMessage());
         }
     }
+<<<<<<< HEAD
 
 
     /**
@@ -236,3 +278,6 @@ public class DrawingView extends View {
 
 
 
+=======
+}
+>>>>>>> 73479522a4da535a1f12065714569d7c133e8510

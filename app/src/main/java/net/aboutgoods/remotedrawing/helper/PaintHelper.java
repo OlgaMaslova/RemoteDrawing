@@ -57,6 +57,7 @@ public class PaintHelper {
         paint.setStrokeWidth(8);
         return paint;
     }
+<<<<<<< HEAD
     public static Paint getEraserBluePrintPaint() {
         Paint paint = new Paint();
         paint.setAntiAlias(true);
@@ -66,4 +67,6 @@ public class PaintHelper {
         paint.setStrokeWidth(50);
         return paint;
     }
+=======
+>>>>>>> 73479522a4da535a1f12065714569d7c133e8510
 }
