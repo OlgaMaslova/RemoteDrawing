@@ -36,7 +36,8 @@ public class DrawingView extends View {
     private Path mCirclePath;
     private String mBackgroundColor = "#424242";
     private float mX, mY;
-    private String mMessage = "";
+    private boolean mEraser = false;
+    private Toast mToast;
 
 
     /**
@@ -72,7 +73,7 @@ public class DrawingView extends View {
         canvas.drawPath(mCirclePath, PaintHelper.getCirclePaint());
 
         // Changes brush of Blue Print for Eraser
-        if (!mMessage.isEmpty()){
+        if (mEraser){
             canvas.drawPath(mPath, PaintHelper.getEraserBluePrintPaint());
         }
 
@@ -203,26 +204,36 @@ public class DrawingView extends View {
      * Set a new  color
      */
     public void setPaintNewColor(JSONObject json, final Activity activity) {
+         if (mEraser) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mToast.cancel();
+                }
+            });
+         }
          try {
             String newColor = json.getString("color");
             this.paintNewColor = PaintHelper.createPaintFromRGB(newColor);
-            mMessage = json.getString("message");
-            if (!mMessage.isEmpty()) {
+            mEraser = json.getBoolean("eraser");
+            if (mEraser) {
                 this.paintNewColor.setStrokeWidth(50);
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         CharSequence text = "You are Eraser!!";
                         int duration = Toast.LENGTH_SHORT;
-                        Toast toast = Toast.makeText(activity, text, duration);
-                        toast.show();
+                        mToast = Toast.makeText(mContext, text, duration);
+                        mToast.show();
                     }
                 });
             }
          } catch (JSONException e) {
             Log.e(TAG, "drawFromJson: " + e.getMessage());
          }
+
          this.mLinePaint = this.paintNewColor;
+
     }
 
     public String getBackgroundColor (Activity activity){
