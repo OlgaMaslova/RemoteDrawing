@@ -4,6 +4,19 @@
     android:layout_height="match_parent"
     android:id="@+id/welcome_screen"
     android:background="@color/blueviolet">
+
+    <EditText
+        android:id="@+id/nicknameInput"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/room_input"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/room_input"
+        android:layout_marginTop="27dp"
+        android:background="@color/white"
+        android:hint="Enter your nickname..."
+        android:inputType="text" />
+
     <EditText
         android:id="@+id/room_input"
         android:layout_height="wrap_content"
@@ -11,15 +24,16 @@
         android:inputType="text"
         android:background="@color/white"
         android:hint="Choose your room..."
-        android:layout_marginTop="108dp"
-        android:layout_alignParentTop="true"
+        android:layout_marginTop="22dp"
+        android:layout_below="@+id/nicknameInput"
         android:layout_centerHorizontal="true" />
+
     <Button
         android:id="@+id/button_submit"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="27dp"
         android:text="OK"
-        android:layout_marginTop="23dp"
         android:layout_below="@+id/room_input"
         android:layout_centerHorizontal="true" />
 

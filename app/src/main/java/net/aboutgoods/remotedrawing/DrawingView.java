@@ -18,6 +18,8 @@ import net.aboutgoods.remotedrawing.helper.SocketHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * The Drawing view.
  */
@@ -38,6 +40,7 @@ public class DrawingView extends View {
     private float mX, mY;
     private boolean mEraser = false;
     private Toast mToast;
+    private ArrayList<Path> mPaths = new ArrayList<>();
 
 
     /**
@@ -84,6 +87,7 @@ public class DrawingView extends View {
         mPath.moveTo(x, y);
         mX = x;
         mY = y;
+
     }
 
     private void touch_move(float x, float y) {
@@ -105,6 +109,7 @@ public class DrawingView extends View {
         mCirclePath.reset();
         // commit the path to our offscreen
         mCanvas.drawPath(mPath, mLinePaint);
+
         // kill this so we don't double draw
         mPath.reset();
     }
@@ -156,49 +161,31 @@ public class DrawingView extends View {
      * @param json     the json
      * @param activity the activity
      */
-    public void drawFromJson(JSONObject json, Activity activity) {
+    public void getPathFromJson(JSONObject json, Activity activity) {
         try {
-
-            if (mCanvas == null) return;
-
             JSONObject jsonCoordinates = json.getJSONObject("coordinates");
-            String userId = json.getString("drawer");
+            //String color = json.getString("color");
+             Path path = new Path();
 
-            if (userId != null && !userId.isEmpty()) {
+             JSONObject jsonOldCoordinate = jsonCoordinates.getJSONObject("old");
+             JSONObject jsonNewCoordinate = jsonCoordinates.getJSONObject("new");
 
-                Paint paint = SocketHelper.getInstance().getPaintColorFromUserId(userId);
+             float oldX = (float) jsonOldCoordinate.getDouble("x");
+             float oldY = (float) jsonOldCoordinate.getDouble("y");
+             float newX = (float) jsonNewCoordinate.getDouble("x");
+             float newY = (float) jsonNewCoordinate.getDouble("y");
+
+             path.moveTo(oldX, oldY);
+             path.quadTo(oldX, oldY, (newX+ oldX)/2, (newY + oldY)/2);
+             path.lineTo(newX, newY);
+
+             mPaths.add(path);
 
 
-                if (paint == null) return;
-
-                JSONObject jsonOldCoordinate = jsonCoordinates.getJSONObject("old");
-                JSONObject jsonNewCoordinate = jsonCoordinates.getJSONObject("new");
-
-                float oldX = (float) jsonOldCoordinate.getDouble("x");
-                float oldY = (float) jsonOldCoordinate.getDouble("y");
-
-                float newX = (float) jsonNewCoordinate.getDouble("x");
-                float newY = (float) jsonNewCoordinate.getDouble("y");
-
-                Path path = new Path();
-                path.moveTo(oldX, oldY);
-                path.lineTo(newX, newY);
-
-                mCanvas.drawPath(path, paint);
-                path.reset();
-
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        invalidate();
-                    }
-                });
-            }
         } catch (JSONException e) {
-            Log.e(TAG, "drawFromJson: " + e.getMessage());
+            Log.e(TAG, "getPathFromJson: " + e.getMessage());
         }
     }
-
 
     /**
      * Set a new  color
@@ -229,7 +216,7 @@ public class DrawingView extends View {
                 });
             }
          } catch (JSONException e) {
-            Log.e(TAG, "drawFromJson: " + e.getMessage());
+            Log.e(TAG, "setPaintNewColor: " + e.getMessage());
          }
 
          this.mLinePaint = this.paintNewColor;
@@ -238,5 +225,21 @@ public class DrawingView extends View {
 
     public String getBackgroundColor (Activity activity){
        return mBackgroundColor;
+    }
+
+/*
+Show all drawings of the user in this Room
+ */
+    public void showDrawing (Activity activity) {
+
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for (final Path p: mPaths) {
+                    mCanvas.drawPath(p, mLinePaint);
+                }
+                invalidate();
+            }
+        });
     }
 }

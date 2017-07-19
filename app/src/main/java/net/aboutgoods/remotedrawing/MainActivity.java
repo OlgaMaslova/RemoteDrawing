@@ -1,56 +1,61 @@
 package net.aboutgoods.remotedrawing;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
 
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Toast;
 
-import android.widget.Button;
-import android.widget.RelativeLayout;
 import net.aboutgoods.remotedrawing.helper.PaintHelper;
 import net.aboutgoods.remotedrawing.helper.SocketHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static android.R.id.button1;
+
 public class MainActivity extends Activity implements DrawingActivity {
 
     private SocketHelper mSocketHelper = SocketHelper.getInstance();
     private DrawingView mDrawingView;
-
-    private Button mButton;
-    private EditText mEdit;
     private String mRoom;
+    private String mName;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         setContentView(R.layout.welcomescreen);
 
-        mButton = (Button) findViewById(R.id.button_submit);
-        mEdit = (EditText) findViewById(R.id.room_input);
+        Button submit = (Button) findViewById(R.id.button_submit);
 
-        mButton.setOnClickListener(new View.OnClickListener() {
+        submit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                mRoom = mEdit.getText().toString();
+                EditText editText = (EditText) findViewById(R.id.room_input);
+                EditText editText1 = (EditText) findViewById(R.id.nicknameInput);
+                mRoom = editText.getText().toString();
+                mName = editText1.getText().toString();
                 if (mRoom.isEmpty()) {
                     mRoom = "General";
                 }
-                SocketHelper.getInstance().login(MainActivity.this);
-                SocketHelper.getInstance().joinRoom(MainActivity.this, mRoom);
+                if (mName.isEmpty()) {
+                    CharSequence text = "Enter your nickname!";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(MainActivity.this, text, duration);
+                    toast.show();
+                } else {
+
+                    SocketHelper.getInstance().login(MainActivity.this);
+                    SocketHelper.getInstance().joinRoom(MainActivity.this, mRoom);
+                }
             }
         });
+
     }
 
 
@@ -114,7 +119,7 @@ public class MainActivity extends Activity implements DrawingActivity {
                 if (!mRoom.equals(newRoom)) {
                     mDrawingView.clear(MainActivity.this);
                     mSocketHelper.clearDrawingSurface();
-                    SocketHelper.getInstance().leave(MainActivity.this);
+                    SocketHelper.getInstance().leaveRoom(MainActivity.this);
                     SocketHelper.getInstance().joinRoom(MainActivity.this, newRoom);
                     return;
                 }
@@ -126,6 +131,13 @@ public class MainActivity extends Activity implements DrawingActivity {
             };
         });
 
+        Button buttonReceive = (Button) findViewById(R.id.buttonReceive);
+        buttonReceive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               mDrawingView.showDrawing(MainActivity.this);
+            }
+        });
         mSocketHelper.drawOn(MainActivity.this, mDrawingView);
     }
 

@@ -54,7 +54,7 @@ public class PaintHelper {
         paint.setColor(Color.BLUE);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.MITER);
-        paint.setStrokeWidth(8);
+        paint.setStrokeWidth(12);
         return paint;
     }
 

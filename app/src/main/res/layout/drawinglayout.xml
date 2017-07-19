@@ -26,20 +26,18 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="19dp"
         android:layout_marginTop="10dp"
-        android:text="Change Color" />
+        android:text="Change Color"
+        android:textSize="12sp" />
 
     <Button
         android:id="@+id/buttonClear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/buttonColor"
-        android:layout_alignBottom="@+id/buttonColor"
-        android:layout_alignParentEnd="true"
+        android:text="Clear All"
+        android:textSize="12sp"
+        android:layout_above="@+id/drawing"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="22dp"
-        android:layout_marginRight="22dp"
-        android:text="Clear All" />
+        android:layout_alignParentEnd="true" />
 
 
 
@@ -49,10 +47,10 @@
         android:layout_height="38dp"
         android:text="Change Room"
         android:textSize="12dp"
-        android:layout_alignTop="@+id/editRoom"
 
-        android:layout_alignRight="@+id/buttonClear"
-        android:layout_alignEnd="@+id/buttonClear" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:id="@+id/YourRoomText"
@@ -76,4 +74,14 @@
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/buttonColor"
         android:layout_alignStart="@+id/buttonColor" />
+
+    <Button
+        android:id="@+id/buttonReceive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/drawing"
+        android:layout_toEndOf="@+id/buttonColor"
+        android:layout_toRightOf="@+id/buttonColor"
+        android:text="Receive Drawing"
+        android:textSize="12sp" />
 </RelativeLayout>

@@ -113,7 +113,7 @@ public class SocketHelper {
             @Override
             public void call(Object... args) {
                 JSONObject jsonData = (JSONObject) args[0];
-                drawingView.drawFromJson(jsonData, activity);
+                drawingView.getPathFromJson(jsonData, activity);
             }
         });
 
@@ -181,7 +181,7 @@ public class SocketHelper {
     * @param activity
     *
      */
-    public void leave (final Activity activity) {
+    public void leaveRoom (final Activity activity) {
         mSocket.emit("leave");
     }
 
@@ -191,6 +191,20 @@ public class SocketHelper {
      */
     public void clearDrawingSurface() {
         mSocket.emit("clear");
+    }
+
+    /**
+     * Clear drawing surface in particular room
+     */
+    public void clearRoom (String room) {
+        JSONObject jsonRoom = new JSONObject();
+        try {
+            jsonRoom.put("room", mRoomName);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mSocket.emit("clearRoom", jsonRoom);
     }
 
     /**
@@ -240,7 +254,19 @@ public class SocketHelper {
         });
 
     }
+
+  /*  public void receiveDrawing (final Activity activity, final DrawingView drawingView) {
+        mSocket.on("receiveDrawing", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject jsonData = (JSONObject) args[0];
+                drawingView.showDrawing(jsonData, activity);
+            }
+        });
+    }
+*/
 }
+
 
 
 
