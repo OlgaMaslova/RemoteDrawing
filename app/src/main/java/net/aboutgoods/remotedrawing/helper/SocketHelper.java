@@ -2,6 +2,7 @@ package net.aboutgoods.remotedrawing.helper;
 
 import android.app.Activity;
 import android.graphics.Paint;
+import android.graphics.Path;
 
 import net.aboutgoods.remotedrawing.DrawingActivity;
 import net.aboutgoods.remotedrawing.DrawingView;
@@ -11,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import io.socket.client.IO;
@@ -28,6 +30,7 @@ public class SocketHelper {
     private LinkedHashMap<String, String> mUserList;
     private Socket mSocket;
     private String mRoomName;
+    private String mName;
 
 
     private SocketHelper() {
@@ -67,9 +70,15 @@ public class SocketHelper {
         * Logs in, gets socket.id
         * @param activity the activity
          */
-    public void login (final Activity activity) {
+    public void login (String pseudo) {
+        JSONObject jsonPseudo = new JSONObject();
+        try {
+            jsonPseudo.put("pseudo", pseudo);
+            mSocket.emit("login", jsonPseudo);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        mSocket.emit("login", "");
     }
 
     /**
@@ -117,7 +126,7 @@ public class SocketHelper {
             }
         });
 
-        mSocket.on("clear", new Emitter.Listener() {
+       mSocket.on("clear", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 drawingView.clear(activity);
@@ -133,13 +142,15 @@ public class SocketHelper {
      * @param room the room
      *
      */
-    public void joinRoom (final Activity activity, String room) {
+    public void joinRoom (final Activity activity, String room, String name) {
 
         mRoomName = room;
-        JSONObject jsonRoom = new JSONObject();
+        mName = name;
+        JSONObject jsonData = new JSONObject();
         try {
-            jsonRoom.put("room", mRoomName);
-            mSocket.emit("joinRoom", jsonRoom);
+            jsonData.put("room", mRoomName);
+            jsonData.put("name", mName);
+            mSocket.emit("joinRoom", jsonData);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -153,28 +164,9 @@ public class SocketHelper {
                             ((DrawingActivity) activity).onLogin(jsonData);
                             return;
                         }
-
                         throw new StackOverflowError(activity.getLocalClassName() + " must implement DrawingActivity");
                     }
         });
-
-
-         mSocket.on("userList", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                JSONArray jsonArray = (JSONArray) args[0];
-                mUserList = new LinkedHashMap<String, String>();
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    try {
-                        JSONObject jsonUser = jsonArray.getJSONObject(i);
-                        mUserList.put(jsonUser.getString("id"), jsonUser.getString("color"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
     }
     /*
     * Leaves the room
@@ -189,7 +181,8 @@ public class SocketHelper {
     /**
      * Clear drawing surface.
      */
-    public void clearDrawingSurface() {
+    public void clearDrawingSurface(DrawingView drawingView) {
+        
         mSocket.emit("clear");
     }
 
@@ -199,31 +192,17 @@ public class SocketHelper {
     public void clearRoom (String room) {
         JSONObject jsonRoom = new JSONObject();
         try {
-            jsonRoom.put("room", mRoomName);
+            jsonRoom.put("room", room);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
         mSocket.emit("clearRoom", jsonRoom);
     }
+    /* Get the complete drawing and send it to the server
 
-    /**
-     * Gets paint color from user id.
-     *
-     * @param userId the user id
-     * @return the paint color from user id
      */
-    public Paint getPaintColorFromUserId(String userId) {
 
-        if (mUserList == null) return null;
-
-        String color = mUserList.get(userId);
-
-
-        if (color == null) return null;
-
-        return PaintHelper.createPaintFromRGB(color);
-    }
 
 
     /**
@@ -255,16 +234,6 @@ public class SocketHelper {
 
     }
 
-  /*  public void receiveDrawing (final Activity activity, final DrawingView drawingView) {
-        mSocket.on("receiveDrawing", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                JSONObject jsonData = (JSONObject) args[0];
-                drawingView.showDrawing(jsonData, activity);
-            }
-        });
-    }
-*/
 }
 
 

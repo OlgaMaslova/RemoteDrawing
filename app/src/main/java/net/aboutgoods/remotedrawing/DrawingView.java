@@ -7,7 +7,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.Environment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -18,7 +20,9 @@ import net.aboutgoods.remotedrawing.helper.SocketHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.io.File;
 
 /**
  * The Drawing view.
@@ -41,6 +45,9 @@ public class DrawingView extends View {
     private boolean mEraser = false;
     private Toast mToast;
     private ArrayList<Path> mPaths = new ArrayList<>();
+    private String mPseudo;
+    private String mPreviousPseudo = null;
+
 
 
     /**
@@ -51,7 +58,7 @@ public class DrawingView extends View {
      */
     public DrawingView(final Activity activity, Paint paint) {
         super(activity);
-        this.mContext =activity;
+        this.mContext = activity;
         this.mPath = new Path();
         this.mBitmapPaint = new Paint(Paint.DITHER_FLAG);
         this.mLinePaint = paint;
@@ -163,9 +170,14 @@ public class DrawingView extends View {
      */
     public void getPathFromJson(JSONObject json, Activity activity) {
         try {
-            JSONObject jsonCoordinates = json.getJSONObject("coordinates");
-            //String color = json.getString("color");
+            if (mCanvas == null) return;
+
+             JSONObject jsonCoordinates = json.getJSONObject("coordinates");
+             mPseudo = json.getString("drawer");
+             String colorOfDrawer = json.getString("color");
+             Paint paint = PaintHelper.createPaintFromRGB(colorOfDrawer);
              Path path = new Path();
+
 
              JSONObject jsonOldCoordinate = jsonCoordinates.getJSONObject("old");
              JSONObject jsonNewCoordinate = jsonCoordinates.getJSONObject("new");
@@ -178,13 +190,30 @@ public class DrawingView extends View {
              path.moveTo(oldX, oldY);
              path.quadTo(oldX, oldY, (newX+ oldX)/2, (newY + oldY)/2);
              path.lineTo(newX, newY);
-
              mPaths.add(path);
 
+             mCanvas.drawPath(path, paint);
+
+             activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String toastText =  mPseudo.concat(" is drawing");
+                    int duration = Toast.LENGTH_SHORT;
+                    mToast = Toast.makeText(mContext, toastText, duration);
+                    mToast.setGravity(Gravity.BOTTOM, 50, 50);
+                    if (!mPseudo.equals(mPreviousPseudo)) {
+                        mToast.show();
+                    }
+                    mPreviousPseudo = mPseudo;
+                    invalidate();
+
+                }
+             });
 
         } catch (JSONException e) {
             Log.e(TAG, "getPathFromJson: " + e.getMessage());
         }
+
     }
 
     /**
@@ -212,6 +241,7 @@ public class DrawingView extends View {
                         int duration = Toast.LENGTH_SHORT;
                         mToast = Toast.makeText(mContext, text, duration);
                         mToast.show();
+                        invalidate();
                     }
                 });
             }
@@ -242,4 +272,7 @@ Show all drawings of the user in this Room
             }
         });
     }
+
+
+
 }

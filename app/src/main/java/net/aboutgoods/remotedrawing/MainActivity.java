@@ -50,8 +50,8 @@ public class MainActivity extends Activity implements DrawingActivity {
                     toast.show();
                 } else {
 
-                    SocketHelper.getInstance().login(MainActivity.this);
-                    SocketHelper.getInstance().joinRoom(MainActivity.this, mRoom);
+                    SocketHelper.getInstance().login(mName);
+                    SocketHelper.getInstance().joinRoom(MainActivity.this, mRoom, mName);
                 }
             }
         });
@@ -65,6 +65,7 @@ public class MainActivity extends Activity implements DrawingActivity {
             @Override
             public void run() {
                 try {
+
                     String myColor = jsonData.getString("color");
                     String myRoom = jsonData.getString("room");
                     Paint myPaint = PaintHelper.createPaintFromRGB(myColor);
@@ -93,7 +94,7 @@ public class MainActivity extends Activity implements DrawingActivity {
             @Override
             public void onClick(View v) {
                 mDrawingView.clear(MainActivity.this);
-                mSocketHelper.clearDrawingSurface();
+                mSocketHelper.clearDrawingSurface(mDrawingView);
             }
         });
 
@@ -118,9 +119,9 @@ public class MainActivity extends Activity implements DrawingActivity {
 
                 if (!mRoom.equals(newRoom)) {
                     mDrawingView.clear(MainActivity.this);
-                    mSocketHelper.clearDrawingSurface();
+                    mSocketHelper.clearDrawingSurface(mDrawingView);
                     SocketHelper.getInstance().leaveRoom(MainActivity.this);
-                    SocketHelper.getInstance().joinRoom(MainActivity.this, newRoom);
+                    SocketHelper.getInstance().joinRoom(MainActivity.this, newRoom, mName);
                     return;
                 }
 

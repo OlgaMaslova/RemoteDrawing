@@ -24,17 +24,17 @@
         android:inputType="text"
         android:background="@color/white"
         android:hint="Choose your room..."
-        android:layout_marginTop="22dp"
+        android:layout_marginTop="51dp"
         android:layout_below="@+id/nicknameInput"
         android:layout_centerHorizontal="true" />
 
     <Button
         android:id="@+id/button_submit"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="27dp"
-        android:text="OK"
         android:layout_below="@+id/room_input"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:text="OK" />
 
 </RelativeLayout>
