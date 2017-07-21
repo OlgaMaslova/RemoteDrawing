@@ -27,7 +27,6 @@ public class SocketHelper {
 
     private static final String HOST = "http://192.168.1.60:3000";
     private static SocketHelper mInstance = null;
-    private LinkedHashMap<String, String> mUserList;
     private Socket mSocket;
     private String mRoomName;
     private String mName;
