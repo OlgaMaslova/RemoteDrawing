@@ -107,6 +107,14 @@ public class MainActivity extends Activity implements DrawingActivity {
             }
         });
 
+        Button buttonBackground = (Button) findViewById(R.id.Background);
+        buttonBackground.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSocketHelper.newBackground(MainActivity.this, mDrawingView);
+            }
+        });
+
         Button buttonRoom = (Button) findViewById(R.id.buttonRoom);
         buttonRoom.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -200,9 +200,36 @@ public class SocketHelper {
         }
         mSocket.emit("clearRoom", jsonRoom);
     }
-    /* Get the complete drawing and send it to the server
-
+    /**
+     * Gets new background color from the server
+     * @param activity the activity
+     * @param drawingView the drawing view
      */
+
+
+
+
+    public void newBackground (final Activity activity, final DrawingView drawingView) {
+
+        String backgroundColor = drawingView.getBackgroundColor(activity);
+        JSONObject jsonBackground = new JSONObject();
+
+        try {
+            jsonBackground.put("color", backgroundColor);
+            mSocket.emit("backgroundChange", jsonBackground);
+        }  catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mSocket.on("newBackground", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject jsonUserColor = (JSONObject) args[0];
+                drawingView.setNewBackgroundColor(jsonUserColor, activity);
+            }
+        });
+
+    }
 
 
 

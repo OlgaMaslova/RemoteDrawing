@@ -84,4 +84,14 @@
         android:layout_toRightOf="@+id/buttonColor"
         android:text="Receive Drawing"
         android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/Background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/buttonColor"
+        android:layout_alignStart="@+id/buttonColor"
+        android:layout_below="@+id/buttonColor"
+        android:layout_marginTop="7dp"
+        android:text="Change Background" />
 </RelativeLayout>

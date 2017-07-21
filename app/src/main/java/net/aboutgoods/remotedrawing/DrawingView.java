@@ -249,6 +249,24 @@ public class DrawingView extends View {
 
     }
 
+    public void setNewBackgroundColor (JSONObject json, final Activity activity) {
+        try {
+            String newBackgroundColor = json.getString("color");
+
+            mCanvas.drawColor(Color.parseColor(newBackgroundColor));
+
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    invalidate();
+                }
+            });
+
+        } catch (JSONException e) {
+            Log.e(TAG, "setPaintNewColor: " + e.getMessage());
+        }
+    }
+
     public String getBackgroundColor (Activity activity){
        return mBackgroundColor;
     }
