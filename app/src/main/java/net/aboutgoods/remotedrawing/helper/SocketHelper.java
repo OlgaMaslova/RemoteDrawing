@@ -140,6 +140,7 @@ public class SocketHelper {
      *
      * @param activity the activity
      * @param room the room
+     * @param name pseudo od the client
      *
      */
     public void joinRoom (final Activity activity, String room, String name) {
@@ -188,6 +189,7 @@ public class SocketHelper {
 
     /**
      * Clear drawing surface in particular room
+     * @param room
      */
     public void clearRoom (String room) {
         JSONObject jsonRoom = new JSONObject();
