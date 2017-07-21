@@ -20,9 +20,8 @@ import net.aboutgoods.remotedrawing.helper.SocketHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.io.File;
+
 
 /**
  * The Drawing view.
