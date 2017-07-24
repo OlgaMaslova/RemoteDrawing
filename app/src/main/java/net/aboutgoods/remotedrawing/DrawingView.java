@@ -267,7 +267,7 @@ public class DrawingView extends View {
         }
     }
 
-    public String getBackgroundColor (Activity activity){
+    public String getBackgroundColor (){
        return mBackgroundColor;
     }
 
@@ -275,6 +275,16 @@ public class DrawingView extends View {
 Show all drawings of the user in this Room
  */
     public void showDrawing (Activity activity) {
+        if (mPaths.isEmpty()) {
+            mCanvas.drawColor(Color.parseColor(mBackgroundColor));
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    invalidate();
+                }
+            });
+            return;
+        }
 
         activity.runOnUiThread(new Runnable() {
             @Override

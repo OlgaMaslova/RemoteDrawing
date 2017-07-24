@@ -48,18 +48,43 @@ public class MainActivity extends Activity implements DrawingActivity {
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(MainActivity.this, text, duration);
                     toast.show();
-                } else {
-
-                    SocketHelper.getInstance().login(mName);
-                    SocketHelper.getInstance().joinRoom(MainActivity.this, mRoom, mName);
+                    return;
                 }
+                SocketHelper.getInstance().login(MainActivity.this, mName);
+
             }
         });
 
     }
 
+    public  void checkName(final JSONObject jsonData) {
+        MainActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
+                try {
+                    Boolean userExists = jsonData.getBoolean("userExists");
+                    if (userExists) {
 
+                        CharSequence text = "This nickname is already taken!";
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(MainActivity.this, text, duration);
+                        toast.show();
+                        
+
+                    } else {
+                        SocketHelper.getInstance().joinRoom(MainActivity.this, mRoom, mName);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            });
+
+    }
+
+    @Override
     public void onLogin(final JSONObject jsonData) {
         MainActivity.this.runOnUiThread(new Runnable() {
             @Override
@@ -93,8 +118,16 @@ public class MainActivity extends Activity implements DrawingActivity {
         buttonClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mSocketHelper.clearRoom(MainActivity.this, mDrawingView, mRoom);
+            }
+        });
+
+        Button buttonClearAll = (Button) findViewById(R.id.buttonClearAll);
+        buttonClearAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSocketHelper.clearDrawingSurface();
                 mDrawingView.clear(MainActivity.this);
-                mSocketHelper.clearDrawingSurface(mDrawingView);
             }
         });
 
@@ -111,7 +144,7 @@ public class MainActivity extends Activity implements DrawingActivity {
         buttonBackground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSocketHelper.newBackground(MainActivity.this, mDrawingView);
+                mSocketHelper.newBackground(MainActivity.this, mDrawingView, mRoom);
             }
         });
 
@@ -126,8 +159,6 @@ public class MainActivity extends Activity implements DrawingActivity {
                 }
 
                 if (!mRoom.equals(newRoom)) {
-                    mDrawingView.clear(MainActivity.this);
-                    mSocketHelper.clearDrawingSurface(mDrawingView);
                     SocketHelper.getInstance().leaveRoom(MainActivity.this);
                     SocketHelper.getInstance().joinRoom(MainActivity.this, newRoom, mName);
                     return;

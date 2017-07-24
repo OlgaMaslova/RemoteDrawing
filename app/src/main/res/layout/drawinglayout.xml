@@ -33,11 +33,11 @@
         android:id="@+id/buttonClear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Clear All"
-        android:textSize="12sp"
         android:layout_above="@+id/drawing"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:text="Clear this Room"
+        android:textSize="12sp" />
 
 
 
@@ -94,4 +94,13 @@
         android:layout_below="@+id/buttonColor"
         android:layout_marginTop="7dp"
         android:text="Change Background" />
+
+    <Button
+        android:id="@+id/buttonClearAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/Background"
+        android:layout_toEndOf="@+id/YourRoomText"
+        android:layout_toRightOf="@+id/YourRoomText"
+        android:text="Clear ALL" />
 </RelativeLayout>

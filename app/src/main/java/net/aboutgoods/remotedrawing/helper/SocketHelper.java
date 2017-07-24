@@ -6,6 +6,7 @@ import android.graphics.Path;
 
 import net.aboutgoods.remotedrawing.DrawingActivity;
 import net.aboutgoods.remotedrawing.DrawingView;
+import net.aboutgoods.remotedrawing.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,7 +70,7 @@ public class SocketHelper {
         * Logs in, gets socket.id
         * @param activity the activity
          */
-    public void login (String pseudo) {
+    public void login (final Activity activity, String pseudo) {
         JSONObject jsonPseudo = new JSONObject();
         try {
             jsonPseudo.put("pseudo", pseudo);
@@ -77,8 +78,23 @@ public class SocketHelper {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        mSocket.on("userExists", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
 
+                JSONObject jsonData = (JSONObject) args[0];
+
+                        if (activity instanceof MainActivity) {
+                            ((MainActivity) activity).checkName(jsonData);
+                        } else {
+                            throw new StackOverflowError(activity.getLocalClassName() + " must extend MainActivity");
+                        }
+
+            }
+        });
     }
+
+
 
     /**
      * Send coordinate.
@@ -181,16 +197,18 @@ public class SocketHelper {
     /**
      * Clear drawing surface.
      */
-    public void clearDrawingSurface(DrawingView drawingView) {
+    public void clearDrawingSurface() {
         
         mSocket.emit("clear");
     }
 
     /**
      * Clear drawing surface in particular room
+     * @param activity
+     * @param drawingView
      * @param room
      */
-    public void clearRoom (String room) {
+    public void clearRoom (final Activity activity, final DrawingView drawingView, String room) {
         JSONObject jsonRoom = new JSONObject();
         try {
             jsonRoom.put("room", room);
@@ -199,6 +217,12 @@ public class SocketHelper {
             e.printStackTrace();
         }
         mSocket.emit("clearRoom", jsonRoom);
+        mSocket.on("clearRoom", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                drawingView.clear(activity);
+            }
+        });
     }
     /**
      * Gets new background color from the server
@@ -206,16 +230,16 @@ public class SocketHelper {
      * @param drawingView the drawing view
      */
 
+    public void newBackground (final Activity activity, final DrawingView drawingView, String room) {
 
-
-
-    public void newBackground (final Activity activity, final DrawingView drawingView) {
-
-        String backgroundColor = drawingView.getBackgroundColor(activity);
+        String backgroundColor = drawingView.getBackgroundColor();
+        String thisRoom = room;
         JSONObject jsonBackground = new JSONObject();
 
         try {
             jsonBackground.put("color", backgroundColor);
+            jsonBackground.put("room", thisRoom);
+
             mSocket.emit("backgroundChange", jsonBackground);
         }  catch (JSONException e) {
             e.printStackTrace();
@@ -231,8 +255,6 @@ public class SocketHelper {
 
     }
 
-
-
     /**
      * Gets new color from the server
      * @param activity the activity
@@ -242,7 +264,7 @@ public class SocketHelper {
 
     public void getNewColor(final Activity activity, final DrawingView drawingView) {
 
-        String backgroundColor = drawingView.getBackgroundColor(activity);
+        String backgroundColor = drawingView.getBackgroundColor();
         JSONObject jsonBackground = new JSONObject();
 
         try {
